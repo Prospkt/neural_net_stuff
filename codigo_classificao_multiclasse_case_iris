@@ -1,0 +1,90 @@
+# codigo para ser usado no google collab - cada duplo espaco e um espaco no collab
+#PRINCIPAIS DIFERENCAS - 3 opcoes (e nao binaria) - classificacao com nome e  nao numero 
+
+
+#escolhendo as bibliotecas do collab
+from pandas import read_csv
+from sklearn.model_selection import train_test_split
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import LabelEncoder  # NEW! lidar com transformacao de palavras ( saidas nome iris)
+from keras.utils import np_utils  #NEW! com transformacao de palavras ( saidas nome iris)
+
+
+
+#importando o arquivo 
+dados = read_csv('/content/irisflower (1).data', sep=",")   # importando - clicar na pastinha que fica do lado - joga la - depois copia caminho ( botao direito) --- obs alguns sao sep=";"
+dados     # opcional para vizualizar os dados - tambem te fala o numero de colunas - nesse caso 24
+
+
+#Settando o x e y 
+X = dados.values[:,0:4]  # deve conter as caracteristicas 
+y = dados.values[:,4]   # deve conter a respota
+y  # opcional para ver se o y esta certo
+
+#Lidando com erro de float NEW!
+X = X.astype('float32') #NEW! Para evitar um erro de float que ocorria embaixo
+
+
+#Lidando com a questao das saidas serem palavras NEW!
+encoder = LabelEncoder()
+encoder.fit(y)
+encoded_Y = encoder.transform(y)
+#converter os nomes das flores em numero
+y2 = np_utils.to_categorical(encoded_Y)
+y2 #aqui pode ver que as palavras foram transformadas e chama y2
+
+
+# Geracao dos arquivos de treino, teste e validacao
+X_train, X_test, y_train, y_test = train_test_split(X, y2, test_size=0.20) # NEW! lembrando que aqui tem que mudar para y2
+
+
+# Geracao do modelo 
+model = Sequential()
+model.add(Dense(100, activation= 'tanh', kernel_initializer= 'he_normal', input_shape=(4,))) #5 colunas-1=4
+model.add(Dense(80, activation = 'relu'))
+model.add(Dense(3, activation= 'softmax'))  #NEW! Multiclasse A SAIDA AGORA SAO 3, assim nao se usa a sigmoid e sim a SOFTMAX > 2saidas
+
+
+# Compilacao do modelo 
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics= ['accuracy']) # NEW!muda a funcao de perda para categorical em vez de binary
+
+
+# Momento da verdade, ou seja de treino 
+history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=50, batch_size=32, verbose=1) # se na tabela de treinamento mostrar loss: nan quer dizer que esta errado 
+# epochs quantidade de vezes, bach - de quanto e quanto te traz um resultado, verbose - te mostra um resultado 
+
+
+
+#GRAFICO1 - plot loss durante treinamento
+plt.subplot(211)
+plt.title('Grafico de Custo')
+plt.plot(history.history['loss'], label= 'Perdas durante os Treinamentos')
+plt.plot(history.history['val_loss'], label= 'Perdas durante os Testes')
+plt.xlabel('Epocas')
+plt.ylabel('Perdas')
+plt.legend
+
+
+#GRAFICO2 - plot accuracy durante treinamento
+plt.subplot(212)
+plt.title('Grafico de Desempenho')
+plt.plot(history.history['accuracy'], label= 'Acuracia durante os Testes')
+plt.plot(history.history['val_accuracy'], label= 'Acuracia durante os Testes')
+plt.xlabel('Epocas')
+plt.ylabel('Acuracia')
+plt.legend
+
+
+
+#THE END
+
+#O QUE FAZER PARA MELHORAR?
+# OBS - alterar os numeros nas devidas linhas acima e nao depois 
+
+#Mexer nos neuronios 
+model.add(Dense(80, activation = 'relu'))  #colocar por exemplo 250 em vez de 80 - (MAIS EFETIVO QUE EPOCHS)
+
+#Mexer na epochs
+history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=50, batch_size=32, verbose=1) # MUDAR PARA 300 em vez de 50
