@@ -1,4 +1,4 @@
-# codigo para ser usado no google collab - cada duplo espaco e um espaco no collab
+# PRIMEIRO CODIGO ID01- para ser usado no google collab - cada duplo espaco e um espaco no collab
 
 #escolhendo as bibliotecas do collab
 from pandas import read_csv
