@@ -1,3 +1,5 @@
+#Obs para fazer isso voce deve separar alguns valores da base de dados e jogar sem eles - mas salva-los em outra planilha para testae 
+
 #escolhendo bibliotecas do collab
 from pandas import read_csv
 from sklearn.model_selection import train_test_split
@@ -7,9 +9,9 @@ import matplotlib.pyplot as plt
 import numpy as np   # essa e a biblioteca importante para teste
 
 
-teste = np.array([[0.2896,0,9.69,0,0.585,5.39,72.9,27.986,6,391,19.2,396.9,21.14]])
+teste = np.array([[0.2896,0,9.69,0,0.585,5.39,72.9,27.986,6,391,19.2,396.9,21.14]]) #coloque toda uma linha da base, ou seja os valores de x aka caracteristicas -- sem a ultima coluna que deve ser o y 
 saidacasa = model.predict(teste)
 saidacasa
 
 # A saida deve ser algo do tipo
-# array([[18.453268]], dtype=float32)
+# array([[18.453268]], dtype=float32)     # a previsao seria 18.45
