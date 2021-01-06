@@ -1,0 +1,44 @@
+#Principais diferencas de classificacao pra regressao
+#1 - tem apenas uma saida
+#2 - funcao relu para iniciar e linear na saida
+#3 - loss e MSE 
+
+#escolhendo bibliotecas do collab
+from pandas import read_csv
+from sklearn.model_selection import train_test_split
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense
+import matplotlib.pyplot as plt
+
+
+dados = read_csv('/content/RegressaoPrecodeCasa.csv', sep=";")  #aqui a separacao e por ponto e virgula
+dados
+
+X = dados.values[:,0:14]
+y = dados.values[:,13]
+
+
+# Geracao dos arquivos de treino, teste e validacao
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20) 
+
+
+# Geracao do modelo 
+model = Sequential() #deeplearning
+model.add(Dense(200, input_dim=14,activation= 'relu', kernel_initializer= 'normal')) # NEW!! usando relu para regressao e melhor esse iput_dim e diferente de input shade
+model.add(Dense(200, activation = 'relu'))
+model.add(Dense(1, activation= 'linear'))  #NEW! Na regressao so tem uma possibilidade de saida 
+
+
+
+# Compilacao do modelo 
+model.compile(optimizer='adam', loss='mse')
+
+
+#GRAFICO - plot loss durante treinamenti=o
+plt.subplot(211)
+plt.title('Grafico de Custo')
+plt.plot(history.history['loss'], label= 'Perdas durante os Treinamentos')
+plt.plot(history.history['val_loss'], label= 'Perdas durante os Testes')
+plt.xlabel('Epocas')
+plt.ylabel('Perdas')
+plt.legend
